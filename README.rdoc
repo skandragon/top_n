@@ -1,0 +1,30 @@
+= top_n
+
+{<img src="https://travis-ci.org/skandragon/top_n.png?branch=master" alt="Build Status" />}[https://travis-ci.org/skandragon/top_n]
+
+This gem allows tracking of the top N (or bottom N) keys added to a list.
+Each key can have an optional value, which is then added to a list of values for that key.
+
+Key types must respond to the usual comparison operators: <, <=, >, >=, and <=>.  Values may be any object type, and need not be unique.  Values are not examined in any way, simply added to an internal list.
+
+If a <key, value> pair is added twice, it will store the value twice for that key, and return it twice in the list for that key, when that key is retrieved.
+
+Once the top N keys are added, adding smaller keys will be ignored.  Adding a larger key will drop the then-smallest value.  Adding another value at an existing key will simply result in
+
+For example, track the top 1,000 EverQuest 2 characters with the highest strenth, the most quests completed, or items crafted, out of the roughly 2.4 million characters which currently exist.
+
+== Contributing to this project
+
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
+* Fork the project.
+* Start a feature/bugfix branch.
+* Commit and push until you are happy with your contribution.
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== Copyright
+
+Copyright (c) 2013 Michael Graff. See LICENSE.txt for
+further details.
+
