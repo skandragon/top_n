@@ -16,4 +16,10 @@ class TestTopN < Minitest::Test
     topn = TopN.new(direction: :bottom)
     assert topn.direction == :bottom
   end
+
+  def test_creation_raises_assertion_with_bad_direction
+    assert_raises(ArgumentError) {
+      TopN.new(direction: :flarg)
+    }
+  end
 end

@@ -1,15 +1,15 @@
 require 'helper'
 
-class TestAdding < Minitest::Test
-  def test_minimum_key_is_nil_on_create
+class TestAddingTop < Minitest::Test
+  def test_threshold_key_is_nil_on_create
     topn = TopN.new
-    assert_nil topn.minimum_key
+    assert_nil topn.threshold_key
   end
 
-  def test_adding_updates_minimum_key
+  def test_adding_updates_threshold_key
     topn = TopN.new
     assert topn.add(5, 5), "add(5, 5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
   def test_adding_increments_size
@@ -22,14 +22,14 @@ class TestAdding < Minitest::Test
     topn = TopN.new(maxsize: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert topn.find(5) == [5], "find(5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
-  def test_adding_sets_minimum_key
+  def test_adding_sets_threshold_key
     topn = TopN.new(maxsize: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert topn.find(5) == [5], "find(5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
   def test_adding_without_exceeding
@@ -38,23 +38,23 @@ class TestAdding < Minitest::Test
     assert topn.add(10, 10), "add(10, 10) failed"
     assert topn.find(5) == [5], "find(5) failed"
     assert topn.find(10) == [10], "find(5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
-  def test_adding_larger_without_exceeding_sets_minimum_key
+  def test_adding_larger_without_exceeding_sets_threshold_key
     topn = TopN.new(maxsize: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
     assert topn.add(10, 10), "add(10, 10) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
-  def test_adding_smaller_without_exceeding_sets_minimum_key
+  def test_adding_smaller_without_exceeding_sets_threshold_key
     topn = TopN.new(maxsize: 10)
     assert topn.add(10, 10), "add(10, 10) failed"
-    assert_equal 10, topn.minimum_key
+    assert_equal 10, topn.threshold_key
     assert topn.add(5, 5), "add(5, 5) failed"
-    assert_equal 5, topn.minimum_key
+    assert_equal 5, topn.threshold_key
   end
 
   def test_adding_two_values_to_the_same_key
