@@ -1,18 +1,18 @@
 require 'helper'
 
 class TestTopN < Minitest::Test
-  def test_creation_without_arguments_works
+  def test_creation_without_arguments
     topn = TopN.new
     assert topn
     assert topn.maxsize > 0
   end
 
-  def test_creation_with_maxsize_works
+  def test_creation_with_maxsize
     topn = TopN.new(maxsize: 100)
     assert topn.maxsize == 100
   end
 
-  def test_creation_with_direction_works
+  def test_creation_with_direction
     topn = TopN.new(direction: :bottom)
     assert topn.direction == :bottom
   end
