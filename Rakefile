@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "top_n"
   gem.homepage = "http://github.com/skandragon/top_n"
   gem.license = "MIT"
-  gem.summary = %Q{Track the top (or bottom) N values added to a list}
-  gem.description = %Q{Track the top (or bottom) N values added to a list, and discard the remainder.}
+  gem.summary = %Q{Track the top (or bottom) N keys added to a list}
+  gem.description = %Q{Track the top (or bottom) N keys added to a list, and discard the remainder.}
   gem.email = "explorer@flame.org"
   gem.authors = ["Michael Graff"]
   # dependencies defined in Gemfile
