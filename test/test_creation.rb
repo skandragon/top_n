@@ -7,7 +7,7 @@ class TestTopN < Minitest::Test
     assert topn.maxsize > 0
   end
 
-  def test_creaton_with_maxsize_works
+  def test_creation_with_maxsize_works
     topn = TopN.new(maxsize: 100)
     assert topn.maxsize == 100
   end
