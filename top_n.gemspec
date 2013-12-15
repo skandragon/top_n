@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
+    ".travis.yml",
     "Gemfile",
     "Guardfile",
     "LICENSE.txt",
@@ -25,7 +26,10 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/top_n.rb",
     "test/helper.rb",
-    "test/test_top_n.rb",
+    "test/test_adding_bottom.rb",
+    "test/test_adding_top.rb",
+    "test/test_creation.rb",
+    "test/test_data.rb",
     "top_n.gemspec"
   ]
   s.homepage = "http://github.com/skandragon/top_n"
@@ -45,6 +49,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.7"])
       s.add_development_dependency(%q<guard>, [">= 0"])
       s.add_development_dependency(%q<guard-minitest>, [">= 0"])
+      s.add_development_dependency(%q<rubysl>, [">= 0"])
     else
       s.add_dependency(%q<minitest>, [">= 0"])
       s.add_dependency(%q<yard>, ["~> 0.7"])
@@ -53,6 +58,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<jeweler>, ["~> 1.8.7"])
       s.add_dependency(%q<guard>, [">= 0"])
       s.add_dependency(%q<guard-minitest>, [">= 0"])
+      s.add_dependency(%q<rubysl>, [">= 0"])
     end
   else
     s.add_dependency(%q<minitest>, [">= 0"])
@@ -62,6 +68,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<jeweler>, ["~> 1.8.7"])
     s.add_dependency(%q<guard>, [">= 0"])
     s.add_dependency(%q<guard-minitest>, [">= 0"])
+    s.add_dependency(%q<rubysl>, [">= 0"])
   end
 end
 
