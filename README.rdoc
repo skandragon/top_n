@@ -3,7 +3,7 @@
 {<img src="https://travis-ci.org/skandragon/top_n.png?branch=master" alt="Build Status" />}[https://travis-ci.org/skandragon/top_n]
 
 This gem allows tracking of the top N (or bottom N) keys added to a list.
-Each key can have an optional value, which is then added to a list of values for that key.
+Each key can have an optional value, which is then added to a list of values for that key.  It acts a lot like a norman Ruby Hash type, but with a limited number of keys based on sorting order.
 
 Key types must respond to the usual comparison operators: <, <=, >, >=, and <=>.  Values may be any object type, and need not be unique.  Values are not examined in any way, simply added to an internal list.
 
