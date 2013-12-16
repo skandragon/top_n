@@ -14,7 +14,7 @@
 #   This can cause memory issues if many values are added to the same key.
 #   If this is the type of data you are tracking, you may need a different
 #   solution.
-class TopN
+class TopN < Hash
   # The maxinum number of keys which will be tracked.
   # @return [Fixnum] the configured maximum number of keys to be tracked.
   attr_reader :maxkeys
@@ -23,20 +23,13 @@ class TopN
   # @return [Symbol] either :top or :bottom.
   attr_reader :direction
 
-  # The current number of keys we are tracking.
-  # @return [FixNum] the count, which will be 0 up to :maxkeys.
-  attr_reader :keycount
-
   # The current value of the minimum (:top) or maximum (:bottom) key.
   # @return [Object] the threshold key.
   attr_reader :threshold_key
 
-  # The currently tracked data as one blob.  This is tied to the
-  # current implementation, so its use is not recommended.
-  # @return [Hash] the internal data structure containing the keys and
-  #  values.  The keys to the returned Hash are the tracked keys, and
-  #  the values at those keys is the list of values.
-  attr_reader :data
+  alias_method :super_store, :store
+  alias_method :super_bracket_assign, :[]=
+  alias_method :super_bracket, :[]
 
   ##
   # Create a new TopN object.  Options available:
@@ -60,7 +53,7 @@ class TopN
   # @example Create with a maximum size of 10, and track smaller values
   #   topn = TopN.new(maxkeys: 10, direction: :bottom)
   #
-  def initialize(options = {})
+  def initialize(default = nil, options = {})
     options = {
       maxkeys: 100,
       direction: :top,
@@ -74,7 +67,6 @@ class TopN
 
     @maxkeys = options[:maxkeys]
     @direction = options[:direction]
-    @keycount = 0
     @threshold_key = nil
 
     unless [:top, :bottom].include?(@direction)
@@ -88,6 +80,8 @@ class TopN
     if @maxkeys <= 0
       raise ArgumentError.new("maxkeys must be >= 1")
     end
+
+    super(default)
   end
 
   ##
@@ -104,11 +98,9 @@ class TopN
   # If an existing (key, value) is permitted, and will result in the list of
   # values at that key having the same value multiple times.
   #
-  # @return [Array] if the value was added to the key's list.
-  #
-  # @return [nil] if the value was not added because the key is too small or
-  # large to be tracked.
-  def add(key, value)
+  # @return [Object] the value passed in.  This will be returned even if
+  # the value is not added because there are too many keys already present.
+  def store(key, value)
     if @direction == :top
       add_top(key, value)
     else
@@ -116,23 +108,9 @@ class TopN
     end
   end
 
-  ##
-  # Find and return the list of values for a key.
-  #
-  # @return [Array<Object>] the list of values for 'key'.
-  #
-  # @return [nil] if the key does not exist.
-  def find(key)
-    @data[key]
-  end
-
-  ##
-  # Return the list of currently tracked keys.
-  #
-  # @return [Array<Object>] the list of values for this key.
-  #  Order is not guaranteed to match the oder which they were added.
-  def keys
-    @data.keys
+  # Behave like #store, with the same semantics.
+  def []=(key, value)
+    store(key, value)
   end
 
   private
@@ -142,21 +120,19 @@ class TopN
   def add_top(key, value)
     @threshold_key ||= key
 
-    if @data.has_key?key
-      @data[key] << value
+    if has_key?key
+      fetch(key) << value
     else
-      if @keycount >= @maxkeys
-        return nil if key < @threshold_key
-        @data.delete(@threshold_key)
-        @keycount -= 1
-        @threshold_key = @data.keys.min
+      if size >= @maxkeys
+        return value if key < @threshold_key
+        delete(@threshold_key)
+        @threshold_key = keys.min
       end
-      @data[key] = [ value ]
-      @keycount += 1
+      super_store(key, [ value ])
       @threshold_key = key if key < @threshold_key
     end
 
-    @data[key]
+    value
   end
 
   ##
@@ -164,20 +140,18 @@ class TopN
   def add_bottom(key, value)
     @threshold_key ||= key
 
-    if @data.has_key?key
-      @data[key] << value
+    if has_key?key
+      fetch(key) << value
     else
-      if @keycount >= @maxkeys
-        return nil if key > @threshold_key
-        @data.delete(@threshold_key)
-        @keycount -= 1
-        @threshold_key = @data.keys.max
+      if size >= @maxkeys
+        return value if key > @threshold_key
+        delete(@threshold_key)
+        @threshold_key = keys.max
       end
-      @data[key] = [ value ]
-      @keycount += 1
+      super_store(key, [ value ])
       @threshold_key = key if key > @threshold_key
     end
 
-    @data[key]
+    value
   end
 end
