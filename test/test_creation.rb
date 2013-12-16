@@ -6,6 +6,11 @@ class TestTopN < Minitest::Test
     assert topn
   end
 
+  def test_creation_with_default_value
+    topn = TopN.new(:flarg)
+    assert_equal :flarg, topn[5]
+  end
+
   def test_creation_without_arguments_sets_maxkeys_to_some_positive_default
     topn = TopN.new
     assert topn.maxkeys > 0
