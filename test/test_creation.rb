@@ -6,14 +6,14 @@ class TestTopN < Minitest::Test
     assert topn
   end
 
-  def test_creation_without_arguments_sets_maxsize_to_some_positive_default
+  def test_creation_without_arguments_sets_maxkeys_to_some_positive_default
     topn = TopN.new
-    assert topn.maxsize > 0
+    assert topn.maxkeys > 0
   end
 
-  def test_creation_with_maxsize
-    topn = TopN.new(maxsize: 100)
-    assert topn.maxsize == 100
+  def test_creation_with_maxkeys
+    topn = TopN.new(maxkeys: 100)
+    assert topn.maxkeys == 100
   end
 
   def test_creation_with_direction
@@ -27,21 +27,21 @@ class TestTopN < Minitest::Test
     }
   end
 
-  def test_creation_raises_assertion_with_zero_maxsize
+  def test_creation_raises_assertion_with_zero_maxkeys
     assert_raises(ArgumentError) {
-      TopN.new(maxsize: 0)
+      TopN.new(maxkeys: 0)
     }
   end
 
-  def test_creation_raises_assertion_with_negative_maxsize
+  def test_creation_raises_assertion_with_negative_maxkeys
     assert_raises(ArgumentError) {
-      TopN.new(maxsize: -1)
+      TopN.new(maxkeys: -1)
     }
   end
 
-  def test_creation_raises_assertion_with_non_fixnum_maxsize
+  def test_creation_raises_assertion_with_non_fixnum_maxkeys
     assert_raises(ArgumentError) {
-      TopN.new(maxsize: 'foo')
+      TopN.new(maxkeys: 'foo')
     }
   end
 

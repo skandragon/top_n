@@ -17,14 +17,14 @@
 class TopN
   # The maxinum number of keys which will be tracked.
   # @return [Fixnum] the configured maximum number of keys to be tracked.
-  attr_reader :maxsize
+  attr_reader :maxkeys
 
   # The configured direction.
   # @return [Symbol] either :top or :bottom.
   attr_reader :direction
 
   # The current number of keys we are tracking.
-  # @return [FixNum] the count, which will be 0 up to :maxsize.
+  # @return [FixNum] the count, which will be 0 up to :maxkeys.
   attr_reader :size
 
   # The current value of the minimum (:top) or maximum (:bottom) key.
@@ -43,7 +43,7 @@ class TopN
   #
   # @param [Hash] options the options used to configure the TopN object.
   #
-  # @option options [Fixnum] :maxsize The maximum number of keys to track.
+  # @option options [Fixnum] :maxkeys The maximum number of keys to track.
   #  Must be a positive Fixnum.  Defaults to 100.
   #
   # @option options [Symbol] :direction Configure the direction.
@@ -58,21 +58,21 @@ class TopN
   #   topn = TopN.new
   #
   # @example Create with a maximum size of 10, and track smaller values
-  #   topn = TopN.new(maxsize: 10, direction: :bottom)
+  #   topn = TopN.new(maxkeys: 10, direction: :bottom)
   #
   def initialize(options = {})
     options = {
-      maxsize: 100,
+      maxkeys: 100,
       direction: :top,
     }.merge(options)
 
     options.keys.each do |opt|
-      unless [:maxsize, :direction].include?opt
+      unless [:maxkeys, :direction].include?opt
         raise ArgumentError.new("invalid option #{opt}")
       end
     end
 
-    @maxsize = options[:maxsize]
+    @maxkeys = options[:maxkeys]
     @direction = options[:direction]
     @data = {}
     @size = 0
@@ -82,12 +82,12 @@ class TopN
       raise ArgumentError.new("direction must be :top or :bottom")
     end
 
-    unless @maxsize.is_a?Fixnum
-      raise ArgumentError.new("maxsize must be a Fixnum")
+    unless @maxkeys.is_a?Fixnum
+      raise ArgumentError.new("maxkeys must be a Fixnum")
     end
 
-    if @maxsize <= 0
-      raise ArgumentError.new("maxsize must be >= 1")
+    if @maxkeys <= 0
+      raise ArgumentError.new("maxkeys must be >= 1")
     end
   end
 
@@ -146,7 +146,7 @@ class TopN
     if @data.has_key?key
       @data[key] << value
     else
-      if @size >= @maxsize
+      if @size >= @maxkeys
         return nil if key < @threshold_key
         @data.delete(@threshold_key)
         @size -= 1
@@ -168,7 +168,7 @@ class TopN
     if @data.has_key?key
       @data[key] << value
     else
-      if @size >= @maxsize
+      if @size >= @maxkeys
         return nil if key > @threshold_key
         @data.delete(@threshold_key)
         @size -= 1

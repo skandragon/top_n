@@ -19,21 +19,21 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_adding_without_exceeding_adds
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert topn.find(5) == [5], "find(5) failed"
     assert_equal 5, topn.threshold_key
   end
 
   def test_adding_sets_threshold_key
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert topn.find(5) == [5], "find(5) failed"
     assert_equal 5, topn.threshold_key
   end
 
   def test_adding_without_exceeding
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert topn.add(10, 10), "add(10, 10) failed"
     assert topn.find(5) == [5], "find(5) failed"
@@ -42,7 +42,7 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_adding_larger_without_exceeding_sets_threshold_key
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(5, 5), "add(5, 5) failed"
     assert_equal 5, topn.threshold_key
     assert topn.add(10, 10), "add(10, 10) failed"
@@ -50,7 +50,7 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_adding_smaller_without_exceeding_sets_threshold_key
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(10, 10), "add(10, 10) failed"
     assert_equal 10, topn.threshold_key
     assert topn.add(5, 5), "add(5, 5) failed"
@@ -58,14 +58,14 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_adding_two_values_to_the_same_key
-    topn = TopN.new(maxsize: 10)
+    topn = TopN.new(maxkeys: 10)
     assert topn.add(1, 1), "add(1, 1) failed"
     assert topn.add(1, 2), "add(1, 2) failed"
     assert_equal [1, 2], topn.find(1).sort
   end
 
   def test_adding_larger_key_when_limit_will_exceed
-    topn = TopN.new(maxsize: 2)
+    topn = TopN.new(maxkeys: 2)
     assert topn.add(1, 1), "add(1, 1) failed"
     assert topn.add(2, 2), "add(1, 1) failed"
     assert topn.add(3, 3), "add(1, 1) failed"
@@ -76,7 +76,7 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_adding_smaller_key_when_limit_will_exceed
-    topn = TopN.new(maxsize: 2)
+    topn = TopN.new(maxkeys: 2)
     assert topn.add(3, 3), "add(1, 1) failed"
     assert topn.add(2, 2), "add(1, 1) failed"
     assert_nil topn.add(1, 1)
@@ -87,7 +87,7 @@ class TestAddingTop < Minitest::Test
   end
 
   def test_torture
-    topn = TopN.new(maxsize: 1000)
+    topn = TopN.new(maxkeys: 1000)
 
     records = []
     300_000.times do
