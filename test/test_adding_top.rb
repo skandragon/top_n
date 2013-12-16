@@ -85,4 +85,19 @@ class TestAddingTop < Minitest::Test
     assert_equal [2], topn.find(2)
     assert_equal [3], topn.find(3)
   end
+
+  def test_torture
+    topn = TopN.new(maxsize: 1000)
+
+    records = []
+    300_000.times do
+      record = rand(4000)
+      records << record
+      topn.add(record, rand(100_000_000))
+    end
+
+    top_records = records.uniq.sort { |a, b| b <=> a }[0..999]
+    keys = topn.keys.sort { |a, b| b <=> a }
+    assert_equal top_records, keys
+  end
 end

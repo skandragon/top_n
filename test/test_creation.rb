@@ -44,4 +44,10 @@ class TestTopN < Minitest::Test
       TopN.new(maxsize: 'foo')
     }
   end
+
+  def test_creation_raises_assertion_for_invalid_argument_names
+    assert_raises(ArgumentError) {
+      TopN.new(flarg: 1)
+    }
+  end
 end

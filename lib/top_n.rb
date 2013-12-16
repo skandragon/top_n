@@ -66,6 +66,12 @@ class TopN
       direction: :top,
     }.merge(options)
 
+    options.keys.each do |opt|
+      unless [:maxsize, :direction].include?opt
+        raise ArgumentError.new("invalid option #{opt}")
+      end
+    end
+
     @maxsize = options[:maxsize]
     @direction = options[:direction]
     @data = {}
@@ -137,19 +143,19 @@ class TopN
   def add_top(key, value)
     @threshold_key ||= key
 
-    if @size >= @maxsize
-      return nil if key < @threshold_key
-      @data.delete(@threshold_key)
+    if @data.has_key?key
+      @data[key] << value
+    else
+      if @size >= @maxsize
+        return nil if key < @threshold_key
+        @data.delete(@threshold_key)
+        @size -= 1
+        @threshold_key = @data.keys.min
+      end
+      @data[key] = [ value ]
+      @size += 1
+      @threshold_key = key if key < @threshold_key
     end
-
-    unless @data.has_key?key
-      @data[key] = []
-      @size += 1 if @size < @maxsize
-    end
-
-    @data[key] << value
-
-    @threshold_key = key if key < @threshold_key
 
     @data[key]
   end
@@ -159,19 +165,19 @@ class TopN
   def add_bottom(key, value)
     @threshold_key ||= key
 
-    if @size >= @maxsize
-      return nil if key > @threshold_key
-      @data.delete(@threshold_key)
+    if @data.has_key?key
+      @data[key] << value
+    else
+      if @size >= @maxsize
+        return nil if key > @threshold_key
+        @data.delete(@threshold_key)
+        @size -= 1
+        @threshold_key = @data.keys.max
+      end
+      @data[key] = [ value ]
+      @size += 1
+      @threshold_key = key if key > @threshold_key
     end
-
-    unless @data.has_key?key
-      @data[key] = []
-      @size += 1 if @size < @maxsize
-    end
-
-    @data[key] << value
-
-    @threshold_key = key if key > @threshold_key
 
     @data[key]
   end

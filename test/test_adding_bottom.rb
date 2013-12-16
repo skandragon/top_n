@@ -85,4 +85,19 @@ class TestAddingBottom < Minitest::Test
     assert_equal [2], topn.find(2)
     assert_nil topn.find(3)
   end
+
+  def test_torture
+    topn = TopN.new(direction: :bottom, maxsize: 10)
+
+    records = []
+    300_000.times do
+      record = rand(4000)
+      records << record
+      topn.add(record, rand(100_000_000))
+    end
+
+    top_records = records.uniq.sort[0..9]
+    keys = topn.keys.sort
+    assert_equal top_records, keys
+  end
 end

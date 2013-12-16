@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "top_n"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Graff"]
-  s.date = "2013-12-15"
+  s.date = "2013-12-16"
   s.description = "Track the top (or bottom) N keys added to a list, and discard the remainder."
   s.email = "explorer@flame.org"
   s.extra_rdoc_files = [
