@@ -25,7 +25,7 @@ class TopN
 
   # The current number of keys we are tracking.
   # @return [FixNum] the count, which will be 0 up to :maxkeys.
-  attr_reader :size
+  attr_reader :keycount
 
   # The current value of the minimum (:top) or maximum (:bottom) key.
   # @return [Object] the threshold key.
@@ -74,8 +74,7 @@ class TopN
 
     @maxkeys = options[:maxkeys]
     @direction = options[:direction]
-    @data = {}
-    @size = 0
+    @keycount = 0
     @threshold_key = nil
 
     unless [:top, :bottom].include?(@direction)
@@ -146,14 +145,14 @@ class TopN
     if @data.has_key?key
       @data[key] << value
     else
-      if @size >= @maxkeys
+      if @keycount >= @maxkeys
         return nil if key < @threshold_key
         @data.delete(@threshold_key)
-        @size -= 1
+        @keycount -= 1
         @threshold_key = @data.keys.min
       end
       @data[key] = [ value ]
-      @size += 1
+      @keycount += 1
       @threshold_key = key if key < @threshold_key
     end
 
@@ -168,14 +167,14 @@ class TopN
     if @data.has_key?key
       @data[key] << value
     else
-      if @size >= @maxkeys
+      if @keycount >= @maxkeys
         return nil if key > @threshold_key
         @data.delete(@threshold_key)
-        @size -= 1
+        @keycount -= 1
         @threshold_key = @data.keys.max
       end
       @data[key] = [ value ]
-      @size += 1
+      @keycount += 1
       @threshold_key = key if key > @threshold_key
     end
 
