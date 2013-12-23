@@ -101,11 +101,21 @@ class TopN < Hash
   # @return [Object] the value passed in.  This will be returned even if
   # the value is not added because there are too many keys already present.
   def store(key, value)
-    if @direction == :top
-      add_top(key, value)
+    @threshold_key ||= key
+
+    if has_key?key
+      fetch(key) << value
     else
-      add_bottom(key, value)
+      if size >= @maxkeys
+        return value if compare_to_threshold(key)
+        delete(@threshold_key)
+        adjust_threshold
+      end
+      super_store(key, [ value ])
+      @threshold_key = key if compare_to_threshold(key)
     end
+
+    value
   end
 
   # Behave like #store, with the same semantics.
@@ -115,43 +125,20 @@ class TopN < Hash
 
   private
 
-  ##
-  # Add a (key, value) when the direction is :top.
-  def add_top(key, value)
-    @threshold_key ||= key
-
-    if has_key?key
-      fetch(key) << value
+  def compare_to_threshold(key)
+    if @direction == :top
+      key < @threshold_key
     else
-      if size >= @maxkeys
-        return value if key < @threshold_key
-        delete(@threshold_key)
-        @threshold_key = keys.min
-      end
-      super_store(key, [ value ])
-      @threshold_key = key if key < @threshold_key
+      key > @threshold_key
     end
-
-    value
   end
 
-  ##
-  # Add a (key, value) when the direction is :bottom.
-  def add_bottom(key, value)
-    @threshold_key ||= key
-
-    if has_key?key
-      fetch(key) << value
+  def adjust_threshold
+    if @direction == :top
+      @threshold_key = keys.min
     else
-      if size >= @maxkeys
-        return value if key > @threshold_key
-        delete(@threshold_key)
-        @threshold_key = keys.max
-      end
-      super_store(key, [ value ])
-      @threshold_key = key if key > @threshold_key
+      @threshold_key = keys.max
     end
-
-    value
   end
+
 end
