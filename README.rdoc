@@ -1,7 +1,7 @@
 = top_n
 
 {<img src="https://travis-ci.org/skandragon/top_n.png?branch=master" alt="Build Status" />}[https://travis-ci.org/skandragon/top_n]
-{<img src="https://codeclimate.com/github/skandragon/maidenhead.png" />}[https://codeclimate.com/github/skandragon/maidenhead]
+{<img src="https://gemnasium.com/skandragon/top_n.png" alt="Dependency Status" />}[https://gemnasium.com/skandragon/top_n]
 {<img src="https://codeclimate.com/github/skandragon/top_n.png" />}[https://codeclimate.com/github/skandragon/top_n]
 
 This gem allows tracking of the top N (or bottom N) keys added to a list.
